@@ -2,6 +2,10 @@ package org.dgk.util.compress.lwz;
 
 import java.io.IOException;
 
+import org.dgk.util.compress.lwz.LwzFactory.LwzVersion;
+import org.dgk.util.compress.lwz.impl.LwzImpl;
+import org.dgk.util.compress.lwz.impl.LwzV2Impl;
+
 /**
  * LWZ Util Starter
  * 
@@ -12,29 +16,35 @@ public class LwzStarter {
 	private static final String MODE_ENCODE = "e";
 	private static final String MODE_DECODE = "d";
 	private static final String MODE_HELP = "h";
+	private static final int ARGS_LENGTH = 3;
 	
 	public static void main(String[] args) throws IOException {
 		
 		if(args == null || args.length < 1) {
 			throw new IllegalArgumentException("wrong arguments count, user java -jar LwzStarter.jar h to get help info");
 		}
+		
+		LwzFactory lwzFactory  = new LwzFactoryImpl();
+		lwzFactory.registerVersion(LwzVersion.V1, LwzImpl.class);
+		lwzFactory.registerVersion(LwzVersion.V2, LwzV2Impl.class);
+		
 		switch (args[0]) {
 			case MODE_HELP: {
 				printHelpInfo();
 				break;
 			}
 			case MODE_ENCODE: {
-				if(args == null || args.length < 3) {
+				if(args == null || args.length < ARGS_LENGTH) {
 					throw new IllegalArgumentException("wrong arguments count, user java -jar LwzStarter.jar h to get help info");
 				}
-				LwzFactory.getInstance().encode(args[1], args[2]);
+				lwzFactory.getInstance().encode(args[1], args[2]);
 				break;
 			}
 			case MODE_DECODE: {
-				if(args == null || args.length < 3) {
+				if(args == null || args.length < ARGS_LENGTH) {
 					throw new IllegalArgumentException("wrong arguments count, user java -jar LwzStarter.jar h to get help info");
 				}
-				LwzFactory.getInstance().decode(args[1], args[2]);
+				lwzFactory.getInstance().decode(args[1], args[2]);
 				break;
 			}
 			default:{

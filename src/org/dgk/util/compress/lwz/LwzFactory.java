@@ -1,21 +1,64 @@
 package org.dgk.util.compress.lwz;
 
 /**
- * LWZ Util Factory
- * @author Dai Zong 2018年7月1日
+ * Lwz抽象工厂
+ * @author Dai Zong 2018年7月7日
+ *
  */
-public class LwzFactory {
-	
-	private static final Lwz INSTANCE = new LwzImpl();
+public interface LwzFactory {
 	
 	/**
-	 * get a singleton instance LWZ Util
-	 * 
+	 * register a Lwz implement
 	 * @author Dai Zong
-	 * @return LWZ Util
+	 * 2018年7月7日
+	 * 
+	 * @param version version
+	 * @param clazz Lwz implement class
+	 * @return success flag;
 	 */
-	public static Lwz getInstance() {
-		return INSTANCE;
+	boolean registerVersion(LwzVersion version, Class<? extends Lwz> clazz);
+	
+	/**
+	 * get Lwz client by version
+	 * @author Dai Zong
+	 * 2018年7月7日
+	 * 
+	 * @param version
+	 * @return
+	 */
+	public Lwz getLwzByVersion(LwzVersion version);
+	
+	/**
+	 * get Lwz client by latest version
+	 * @author Dai Zong
+	 * 2018年7月7日
+	 * 
+	 * @return
+	 */
+	public Lwz getInstance();
+	
+	/**
+	 * Lwz版本
+	 * @author Dai Zong 2018年7月7日
+	 *
+	 */
+	enum LwzVersion{
+		/**
+		 * 版本1
+		 */
+		V1(1),
+		/**
+		 * 版本2
+		 */
+		V2(2);
+		private LwzVersion(int version) {
+			this.version = version;
+		}
+		private int version;
+		
+		public int getVersion() {
+			return version;
+		}
 	}
 
 }

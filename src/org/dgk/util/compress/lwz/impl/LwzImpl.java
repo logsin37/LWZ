@@ -1,4 +1,4 @@
-package org.dgk.util.compress.lwz;
+package org.dgk.util.compress.lwz.impl;
 
 import java.io.BufferedInputStream;
 import java.io.BufferedOutputStream;
@@ -15,6 +15,7 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Iterator;
 
+import org.dgk.util.compress.lwz.Lwz;
 import org.dgk.util.compress.lwz.Lwz.LwzDictionary;
 import org.dgk.util.compress.lwz.Lwz.LwzDictionary.DictionaryPage;
 
@@ -29,12 +30,11 @@ public class LwzImpl implements Lwz {
 	
 	public static final Charset CHAR_SET = Charset.forName("UTF-8");
 	
-	private static final int MAX_UNSIGNED_BYTE = 255;
-	
 	/**
-	 * original dictionary (byte -256~255)
+	 * original dictionary (byte 0~255)
 	 */
 	private static final LwzDictionary  ORIGINAL_DICT;
+	private static final int TWO = 2;
 	
 	/**
 	 * inti original dictionary
@@ -43,11 +43,11 @@ public class LwzImpl implements Lwz {
 		ORIGINAL_DICT = new LwzDictionaryImpl();
 		byte temp;
 		byte[] tempArr;
-		for(int i=(-MAX_UNSIGNED_BYTE-1) ; i<MAX_UNSIGNED_BYTE ; i++) {
+		for(int i=0 ; i<=Constants.MAX_UNSIGND_BYTE ; i++) {
 			temp = (byte)i;
 			tempArr = new byte[1];
 			tempArr[0] = temp;
-			ORIGINAL_DICT.add(new DictionaryPageImpl(i + 256, tempArr));
+			ORIGINAL_DICT.add(new DictionaryPageImpl(i, tempArr));
 		}
 	}
 
@@ -179,7 +179,7 @@ public class LwzImpl implements Lwz {
 		if(file == null) {
 			throw new NullPointerException("file is null");
 		}
-		if(file.length() > Integer.MAX_VALUE / 2) {
+		if(file.length() > Integer.MAX_VALUE / TWO) {
 			throw new ArrayIndexOutOfBoundsException("file is too large");
 		}
 		
